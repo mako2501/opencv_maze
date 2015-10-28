@@ -4,11 +4,10 @@
 #include <cv.h>
 
 /*
-NAI - PJWSTK
+NAI - PJATK
 OpenCV Projekt - Labirynt
-Program odczytuje z kartki labirynt, interpretuje odpowiednio pola, znajduje start i wyszukuje wyjœcie.
-
-Rafa³ MAKOWSKI s8113
+Program odczytuje z kartki labirynt, interpretuje odpowiednio pola, znajduje start i wyszukuje wyjÅ›cie.
+#2013
 */
 
 using namespace std;
@@ -29,7 +28,7 @@ Rect biggestContour(Mat thr){
 			findContours( thr, contours, hierarchy,CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE ); // szuka wszystkich konturow w obrazie
 			 for( int i = 0; i< contours.size(); i++ ) // po kazdym 
 					  {
-					   double a=contourArea( contours[i],false);  //  oblicza powieszchniê obszaru
+					   double a=contourArea( contours[i],false);  //  oblicza powieszchniÃª obszaru
 					   if(a>largest_area){
 					   largest_area=a;
 					   largest_contour_index=i;                //zachowaj index jesli jest to wiekszy obszar
@@ -39,7 +38,7 @@ Rect biggestContour(Mat thr){
 			 return bounding_rect;
 }
 
-// rysuje zielon¹ liniê w macierzy pomiedzy dwoma punktami
+// rysuje zielonÂ¹ liniÃª w macierzy pomiedzy dwoma punktami
 void drawLine( Mat img, Point start, Point end )
 {
   int thickness = 2;
@@ -70,7 +69,7 @@ bool wallExist(Mat m, Point t, int step, direction d){
 	case East: p.x+=step;break;
 	}
 	//cout<<"wallExist checkDir=["<<d<<"], point=["<<p<<"], isExist "<<(m.at<uchar>(p.y,p.x) == 0)<<"\n";
-	// uwaga na punkt poza macierz¹
+	// uwaga na punkt poza macierzÂ¹
 	if(p.x>=0 && p.y>=0 && p.x<=m.cols && p.y<=m.rows)
 	{
 	Point3_<uchar>* c = m.ptr<Point3_<uchar> >(p.y,p.x);
@@ -98,14 +97,14 @@ Point addPoint(Mat m, Point t, int step,direction d){
 	return p;
 }
 
-//wypala miejsce - tu by³em
+//wypala miejsce - tu byÂ³em
 void mark(Mat m, Point p,int step)
 {
 	cout<<"mark point=["<<p<<"]\n";
 	rectangle(m,Point(p.x-step/2+2,p.y-step/2+2),Point(p.x+step/2-2, p.y+step/2-2),Scalar(125,125,125),CV_FILLED );
 }
 
-// odznacza miejce tu by³em
+// odznacza miejce tu byÂ³em
 void unMark(Mat m, Point p,int step)
 {
 	cout<<"unMark point=["<<p<<"]\n";
@@ -130,7 +129,7 @@ bool solveLab(Mat m, Point p, int step,Rect r,int ix,Point* exitPoints)
 	
 	
 	if (isOutside(p,r)) return true;//jezeli jestem poza labiryntem to koniec
-	if(isMarked(m,p)) return false; //jezeli tu by³em koniec
+	if(isMarked(m,p)) return false; //jezeli tu byÂ³em koniec
 	mark(m,p,step); // oznacz pole na ktorym stoisz
 	 
 	exitPoints[ix]=p; //zapamietuje pozycje
@@ -171,9 +170,9 @@ int main( int argc, char** argv ) {
 	Rect tesRect, labRect;
 
 	Mat src;
-	Mat thr(src.rows,src.cols,CV_8UC1); // do okreœlenia biggestBloba labiryntu
+	Mat thr(src.rows,src.cols,CV_8UC1); // do okreÂœlenia biggestBloba labiryntu
 	Mat teseusMat(src.rows,src.cols,CV_8UC1); // w niej szukam Tezeusza - czerwony
-	Mat labiryntMat(src.rows,src.cols,CV_8UC1); // w nim jest poszukiwane wyjœcie
+	Mat labiryntMat(src.rows,src.cols,CV_8UC1); // w nim jest poszukiwane wyjÂœcie
 
 	while( true ) {
 		
@@ -188,35 +187,35 @@ int main( int argc, char** argv ) {
 			cvtColor(teseusMat,teseusMat,CV_BGR2HSV);			
 			//inRange(teseusMat,Scalar(100, 50, 50),Scalar(250, 240, 240),teseusMat); //120 179	
 
-			inRange(teseusMat,Scalar(150, 50, 50),Scalar(200, 240, 240),teseusMat); //- dobry dla druknietego labiryntu œwiat³o ja¿eniowka
+			inRange(teseusMat,Scalar(150, 50, 50),Scalar(200, 240, 240),teseusMat); //- dobry dla druknietego labiryntu ÂœwiatÂ³o jaÂ¿eniowka
 			//	inRange(teseusMat,Scalar(0, 135, 135),Scalar(30, 255, 400),dstA);
 			//inRange(teseusMat, Scalar(330, 135, 135), Scalar(360, 255, 400), dstB);
 			//bitwise_or(dstA,dstB,teseusMat);
-			tesRect = biggestContour(teseusMat); // prost. dooko³a Tezeusza
+			tesRect = biggestContour(teseusMat); // prost. dookoÂ³a Tezeusza
 
 			// przygotowanie obrazu labiryntu
 			blur(src, labiryntMat, Size(2,2));				
 			cvtColor(labiryntMat,labiryntMat,CV_RGB2GRAY ); //konw. na szary
 			threshold(labiryntMat, labiryntMat,100, 255,THRESH_BINARY); //100
 			
-			// prost dooko³a labiryntu
+			// prost dookoÂ³a labiryntu
 			cvtColor(src,thr,CV_BGR2GRAY); 
 			threshold(thr, thr,25, 255,THRESH_BINARY);
 			bitwise_not(thr, thr); // odwroc kolory
 			labRect = biggestContour(thr);
 
-			rectangle(src, labRect,  Scalar(0,255,0),1, 8,0); //rysuje dooko³a labiryntu i teszeusza prost
+			rectangle(src, labRect,  Scalar(0,255,0),1, 8,0); //rysuje dookoÂ³a labiryntu i teszeusza prost
 			rectangle(src, tesRect,  Scalar(0,255,0),1, 8,0); 
 
-			int step = tesRect.width-1; // d³ugoœæ kroku Tezeusza
+			int step = tesRect.width-1; // dÂ³ugoÂœÃ¦ kroku Tezeusza
 
-			Point tes = Point(tesRect.x+tesRect.width/2,tesRect.y+tesRect.height/2); // punkt wyjœciowy
+			Point tes = Point(tesRect.x+tesRect.width/2,tesRect.y+tesRect.height/2); // punkt wyjÂœciowy
 			
-			int ix=0; // do tablicy wsp. kroków
+			int ix=0; // do tablicy wsp. krokÃ³w
 
 			
 
-			// zacznij szukanie tylko jeœli punkt jest wewnatrz labiryntu (kamerka czasem lapie rozne rzeczy)
+			// zacznij szukanie tylko jeÂœli punkt jest wewnatrz labiryntu (kamerka czasem lapie rozne rzeczy)
 			if(labRect.contains(tesRect.tl()) && labRect.contains(tesRect.br())){ 
 
 			// wielkosc tablicy nie jest wieksza niz ilosc wszystkich pol na mapie
